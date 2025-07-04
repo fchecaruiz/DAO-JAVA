@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
+    	// PRUEBA DE CONEXION A BASE DE DATOS
   
 //    	        try {
 //    	           

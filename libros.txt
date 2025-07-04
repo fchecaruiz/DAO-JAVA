@@ -1,3 +1,5 @@
 456789;raton de los campos;hermida bolaños
 789;curso de java;javier lete
 128;el señor de los anillos;javier fernandez
+456;El SEÑOR DE LOS CAMPOS;JOSE LUIS FERNANDEZ GALLARDO
+1372;el telefono misterioso;gabriel marquez
