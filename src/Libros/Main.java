@@ -74,12 +74,25 @@ public class Main {
             	System.out.println("Modifica un libro ");
             	
                 System.out.println("INTRODUCE UN ID ");
+               
+                int guardoId;
+                
+                try {
+                String inputId = scanner.nextLine();
+                guardoId = Integer.parseInt(inputId);
+                
+                }catch(NumberFormatException e) {
+                	
+                	System.out.println("ID introducido no valido. Prueba de nuevo");
+                	continue;
+                	// para que el usuario siga con el programa y selecione otra opcion
+                }
             	
-            	int guardoId = Integer.parseInt(scanner.nextLine());
-            	
+    
             	
             	nuevaDao actualizarLibro = new nuevaDao();
-            	actualizarLibro.updateLibro(guardoId, scanner);
+     
+				actualizarLibro.updateLibro(guardoId, scanner);
             	
             	System.out.println("libro actualizado correctamente ");
     

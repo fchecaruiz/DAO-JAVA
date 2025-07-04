@@ -98,7 +98,7 @@ public class nuevaDao {
 		        Scanner scArchivo = new Scanner(fr);
 
 		        while (scArchivo.hasNextLine()) {
-		            String[] partes = scArchivo.nextLine().split(",");
+		            String[] partes = scArchivo.nextLine().split(";");
 		            int id = Integer.parseInt(partes[0]);
 		            String titulo = partes[1];
 		            String autor = partes[2];
