@@ -1,32 +1,15 @@
 package Libros;
 
-
-import java.sql.SQLException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
-    	// PRUEBA DE CONEXION A BASE DE DATOS
-  
-//    	        try {
-//    	           
-//    	            Class.forName("com.mysql.cj.jdbc.Driver");
-//    	            Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/libros","root","12071609");
-//    	            conexion.close();
-//    	         
-//
-//    	        } catch (ClassNotFoundException e) {
-//    	            e.printStackTrace();
-//    	        }
-//    	    
-        
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Libro> listaLibros = new ArrayList<>();
+        NuevaDao dao = new NuevaDao();
         int opcion;
 
-        
-        
         do {
             System.out.println("\n--- MENÚ ---");
             System.out.println("1. Añadir libro");
@@ -35,104 +18,81 @@ public class Main {
             System.out.println("4. Borrar libro");
             System.out.println("5. Salir");
             System.out.print("Elige una opción: ");
-            
+
             opcion = Integer.parseInt(scanner.nextLine());
-            
-            	
-                if (opcion == 1) {
-                	System.out.print("ID: ");
-                	int id = scanner.nextInt();
-                	scanner.nextLine();
-                	System.out.print("Título: ");
-                	String titulo = scanner.nextLine();
-                	System.out.print("Autor: ");
-                	String autor = scanner.nextLine();
-                	
-                	
-        			Libro nuevoLibro = new Libro(id,titulo,autor);
-        	        listaLibros.add(nuevoLibro);
-        	        System.out.println(nuevoLibro);
 
-                	
-                	nuevaDao dao = new nuevaDao();
-        			dao.crearLibro(nuevoLibro);
-        			
-        			System.out.println(listaLibros);
+            try {
+                switch (opcion) {
+                    case 1:
+                        System.out.print("ID: ");
+                        int id = Integer.parseInt(scanner.nextLine());
+                        System.out.print("Título: ");
+                        String titulo = scanner.nextLine();
+                        System.out.print("Autor: ");
+                        String autor = scanner.nextLine();
 
-              
-            } else if (opcion == 2) {
-            	
-            	System.out.println("\nMostrando los libros........ " );
-            	
-            	nuevaDao nuevaLectura = new nuevaDao();
-            	nuevaLectura.leerLibros();
-            	
-            	System.out.println("Se han mostrado todos los libros que incluye el archivo de texto: " + "\nlibros.txt");
-            	
-            }  else if (opcion == 3) {
-            	
-            	System.out.println("Modifica un libro ");
-            	
-                System.out.println("INTRODUCE UN ID ");
-               
-                int guardoId;
-                
-                try {
-                String inputId = scanner.nextLine();
-                guardoId = Integer.parseInt(inputId);
-                
-                }catch(NumberFormatException e) {
-                	
-                	System.out.println("ID introducido no valido. Prueba de nuevo");
-                	continue;
-                	// para que el usuario siga con el programa y selecione otra opcion
+                        Libro nuevoLibro = new Libro(id, titulo, autor);
+                        dao.crearLibro(nuevoLibro);
+                        System.out.println("Libro creado correctamente.");
+                        break;
+
+                    case 2:
+                        ArrayList<Libro> listaDeLibros = dao.leerLibros();
+                        for (Libro libro : listaDeLibros) {
+                            System.out.println(libro);
+                        }
+                        break;
+
+                    case 3:
+                        System.out.print("Introduce el ID del libro a modificar: ");
+                        int idModificar = Integer.parseInt(scanner.nextLine());
+                        System.out.print("Nuevo título: ");
+                        String nuevoTitulo = scanner.nextLine();
+                        System.out.print("Nuevo autor: ");
+                        String nuevoAutor = scanner.nextLine();
+
+                        boolean actualizado = dao.updateLibro(idModificar, nuevoTitulo, nuevoAutor);
+                        if (actualizado) {
+                            System.out.println("Libro actualizado correctamente.");
+                        } else {
+                            System.out.println("No se encontró un libro con ese ID.");
+                        }
+                        break;
+
+                    case 4:
+                        System.out.print("Introduce el ID del libro a borrar: ");
+                        int idBorrar = Integer.parseInt(scanner.nextLine());
+                        System.out.print("¿Seguro que quieres borrar el libro? (s/n): ");
+                        String confirmacion = scanner.nextLine();
+
+                        if (confirmacion.equalsIgnoreCase("s")) {
+                            dao.deletedLibro(idBorrar);
+                        } else {
+                            System.out.println("Operación cancelada.");
+                        }
+                        break;
+
+                    case 5:
+                        System.out.println("Hasta pronto!");
+                        break;
+
+                    default:
+                        System.out.println("Opción no válida.");
                 }
-            	
-    
-            	
-            	nuevaDao actualizarLibro = new nuevaDao();
-     
-				actualizarLibro.updateLibro(guardoId, scanner);
-            	
-            	System.out.println("libro actualizado correctamente ");
-    
-            	
-            } else if (opcion == 4) {
-
-                System.out.println("Introduce un ID para borrar libro: ");
-                int id = Integer.parseInt(scanner.nextLine());
-
-                System.out.println("¿Estás seguro de que quieres borrar el libro con ID " + id + "? (s/n)");
-                String confirmacion = scanner.nextLine();
-
-                if (confirmacion.equalsIgnoreCase("s")) {
-                    nuevaDao nuevaDAO = new nuevaDao();
-                    nuevaDAO.deletedLibro(id);
-                    System.out.println("📕 Libro borrado correctamente.");
-                } else {
-                    System.out.println("❌ Operación cancelada. El libro no se ha borrado.");
-                }
-            
-
-            
-            } else if (opcion == 5) {
-            	
-                System.out.println("SALIR ......Hasta pronto, Fernando!");
-                
-            } else {
-            	
-                System.out.println("❌ Opción no válida. Intenta otra vez.");
+            } catch (IOException e) {
+                System.out.println("Error de entrada/salida: " + e.getMessage());
             }
-            
-
         } while (opcion != 5);
 
         scanner.close();
-       
     }
-
-
 }
 
+            
+            
+            
+            
+            
+            
 
 
